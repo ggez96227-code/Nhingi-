@@ -4,7 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Window = OrionLib:MakeWindow({
-	Name = "Dragon Blox V1.3",
+	Name = "Dragon Blox V1.4",
 	HidePremium = false,
 	SaveConfig = true,
 	ConfigFolder = "Config"
@@ -1992,3 +1992,27 @@ task.spawn(function()
 end)
 
 OrionLib:Init()
+local TimeLabel = Tab6:AddLabel("Thời gian chạy script: 00:00:00")
+
+task.spawn(function()
+	local Seconds = 0
+
+	while true do
+		task.wait(1)
+
+		Seconds += 1
+
+		local Hours = math.floor(Seconds / 3600)
+		local Minutes = math.floor((Seconds % 3600) / 60)
+		local Sec = Seconds % 60
+
+		TimeLabel:Set(
+			string.format(
+				"Thời gian chạy script: %02d:%02d:%02d",
+				Hours,
+				Minutes,
+				Sec
+			)
+		)
+	end
+end)
