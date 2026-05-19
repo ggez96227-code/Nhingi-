@@ -329,7 +329,54 @@ task.spawn(function()
 		task.wait(2)
 	end
 end)
+local Section = Tab3:AddSection({
+	Name = "Booster"
+})
+getgenv().AutoLucky25 = false
 
+Tab:AddToggle({
+	Name = "Auto use Lucky 25%/15phut",
+	Default = false,
+	Callback = function(Value)
+		getgenv().AutoLucky25 = Value
+
+		task.spawn(function()
+			while getgenv().AutoLucky25 do
+				local args = {
+					"2"
+				}
+
+				pcall(function()
+					game:GetService("ReplicatedStorage")
+						:WaitForChild("Packages")
+						:WaitForChild("_Index")
+						:WaitForChild("sleitnick_knit@1.4.7")
+						:WaitForChild("knit")
+						:WaitForChild("Services")
+						:WaitForChild("ConsumableService")
+						:WaitForChild("RE")
+						:WaitForChild("ActivateItemRequest")
+						:FireServer(unpack(args))
+				end)
+
+				OrionLib:MakeNotification({
+					Name = "Lucky Buff",
+					Content = "Đã dùng Lucky 25%",
+					Time = 5
+				})
+
+				-- Đợi 14 phút
+				for i = 1, 840 do
+					if not getgenv().AutoLucky25 then
+						break
+					end
+
+					task.wait(1)
+				end
+			end
+		end)
+	end
+})
 --------------------------------------------------
 -- CHECK TIME BOSS
 --------------------------------------------------
