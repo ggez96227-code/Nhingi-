@@ -1747,22 +1747,21 @@ Tab6:AddToggle({
 
 OrionLib:Init()
 
-local TimeLabel = Tab6:AddLabel("⏳ Time Played: 0s")
+local startTime = tick()
 
--- Update thời gian liên tục
+local TimeLabel = TimerTab6:AddLabel("⏳ Time Played: 00:00:00")
+
 task.spawn(function()
 	while true do
-		local played = math.floor(tick() - joinTime)
+		local elapsed = math.floor(tick() - startTime)
 
-		local hours = math.floor(played / 3600)
-		local minutes = math.floor((played % 3600) / 60)
-		local seconds = played % 60
+		local hours = math.floor(elapsed / 3600)
+		local minutes = math.floor((elapsed % 3600) / 60)
+		local seconds = elapsed % 60
 
 		TimeLabel:Set(
 			"⏳ Time Played: " ..
-			hours .. "h " ..
-			minutes .. "m " ..
-			seconds .. "s"
+			string.format("%02d:%02d:%02d", hours, minutes, seconds)
 		)
 
 		task.wait(1)
@@ -1770,4 +1769,3 @@ task.spawn(function()
 end)
 
 OrionLib:Init()
-
