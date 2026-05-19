@@ -334,7 +334,7 @@ local Section = Tab3:AddSection({
 })
 getgenv().AutoLucky25 = false
 
-Tab:AddToggle({
+Tab3:AddToggle({
 	Name = "Auto use Lucky 25%/15phut",
 	Default = false,
 	Callback = function(Value)
