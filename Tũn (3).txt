@@ -4,7 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Window = OrionLib:MakeWindow({
-	Name = "System",
+	Name = "Dragon Blox V1.12",
 	HidePremium = false,
 	SaveConfig = true,
 	ConfigFolder = "Config"
@@ -37,6 +37,13 @@ local Tab5 = Window:MakeTab({
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
+
+local Tab6 = Window:MakeTab({
+	Name = "Setting🥀",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
 
 local AutoFarm = false
 
@@ -1710,6 +1717,35 @@ Toggle.MouseButton1Click:Connect(function()
   OrionLib:ToggleUi()
 end)
 
+local AntiAFK = false
+
+Tab6:AddToggle({
+	Name = "Anti afk ",
+	Default = false,
+	Callback = function(Value)
+		AntiAFK = Value
+
+		if AntiAFK then
+			task.spawn(function()
+				local vu = game:GetService("VirtualUser")
+				local Players = game:GetService("Players")
+				local LocalPlayer = Players.LocalPlayer
+
+				while AntiAFK do
+					LocalPlayer.Idled:Connect(function()
+						vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+						task.wait(1)
+						vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+					end)
+
+					task.wait(5)
+				end
+			end)
+		end
+	end
+})
+
+OrionLib:Init()
 
 
 
