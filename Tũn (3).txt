@@ -43,7 +43,30 @@ local Tab6 = Window:MakeTab({
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
+local TimeLabel = Tab:AddLabel("Thời gian chạy script: 00:00:00")
 
+task.spawn(function()
+	local Seconds = 0
+
+	while true do
+		task.wait(1)
+
+		Seconds += 1
+
+		local Hours = math.floor(Seconds / 3600)
+		local Minutes = math.floor((Seconds % 3600) / 60)
+		local Sec = Seconds % 60
+
+		TimeLabel:Set(
+			string.format(
+				"Thời gian chạy script: %02d:%02d:%02d",
+				Hours,
+				Minutes,
+				Sec
+			)
+		)
+	end
+end)
 
 local AutoFarm = false
 
