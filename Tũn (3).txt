@@ -4,7 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Window = OrionLib:MakeWindow({
-	Name = "Dragon Blox V1.12",
+	Name = "Dragon Blox V1.3",
 	HidePremium = false,
 	SaveConfig = true,
 	ConfigFolder = "Config"
@@ -669,7 +669,7 @@ Tab4:AddTextbox({
 
 Tab4:AddToggle({
     Name = "Auto Biến Hình",
-    Default = true,
+    Default = False,
     Callback = function(Value)
         AutoTransform = Value
 
@@ -802,6 +802,182 @@ Tab4:AddToggle({
             end
         end)
     end
+})
+local AutoPhePha = false
+local AutoShuriken = false
+
+local atomTriggered = false
+
+-- =========================
+-- AUTO PHÊ PHA
+-- =========================
+Tab4:AddToggle({
+	Name = "Auto phê pha",
+	Default = false,
+	Callback = function(Value)
+		AutoPhePha = Value
+
+		if not Value then
+			AutoShuriken = false
+			atomTriggered = false
+			return
+		end
+
+		task.spawn(function()
+			while AutoPhePha do
+				local atom = workspace:FindFirstChild("World Mobs")
+				atom = atom and atom:FindFirstChild("Event Mobs")
+				atom = atom and atom:FindFirstChild("Atom Max")
+
+				if atom and atom:FindFirstChild("Humanoid") then
+					local hum = atom.Humanoid
+
+					-- Check full máu
+					if hum.Health >= hum.MaxHealth and not atomTriggered then
+						atomTriggered = true
+
+						OrionLib:MakeNotification({
+							Name = "Auto phê pha",
+							Content = "Atom Max full máu, đợi 38.5s...",
+							Time = 5
+						})
+
+						task.wait(38.5)
+
+						-- Check lại trước khi fire
+						if not AutoPhePha then
+							break
+						end
+
+						if atom
+							and atom.Parent
+							and hum.Health > 0 then
+
+							-- Bật auto shuriken
+							AutoShuriken = true
+
+							-- Fire 1 lần duy nhất
+							local args = {
+								{
+									Camera = CFrame.new(
+										82.16252899169922,
+										343.9701232910156,
+										-1494.8489990234375,
+										-0.7575300931930542,
+										0.24766631424427032,
+										-0.6039947271347046,
+										0,
+										0.925236701965332,
+										0.3793906569480896,
+										0.6528002619743347,
+										0.2873998284339905,
+										-0.7008945941925049
+									),
+
+									SkillId = "10",
+									Began = true,
+
+									CFrame = CFrame.new(
+										91.51288604736328,
+										336.3675537109375,
+										-1483.99853515625,
+										-0.7575298547744751,
+										0.24766628444194794,
+										-0.6039949655532837,
+										-6.852729228512544e-08,
+										0.9252366423606873,
+										0.37939053773880005,
+										0.6528005003929138,
+										0.2873997092247009,
+										-0.7008943557739258
+									),
+
+									["Typ\208\181"] = 1,
+
+									Aim = vector.create(
+										121.71263122558594,
+										317.3980407714844,
+										-1448.953857421875
+									)
+								}
+							}
+
+							game:GetService("ReplicatedStorage")
+								:WaitForChild("Remotes")
+								:WaitForChild("SkillRemote")
+								:FireServer(unpack(args))
+
+							OrionLib:MakeNotification({
+								Name = "Auto phê pha",
+								Content = "Đã dùng skill!",
+								Time = 5
+							})
+						end
+					end
+
+					-- Reset khi boss chết
+					if hum.Health <= 0 then
+						atomTriggered = false
+						AutoShuriken = false
+					end
+				else
+					atomTriggered = false
+					AutoShuriken = false
+				end
+
+				task.wait(1)
+			end
+		end)
+
+		-- =========================
+		-- AUTO SHURIKEN
+		-- =========================
+		task.spawn(function()
+			while AutoPhePha do
+				if AutoShuriken then
+					local atom = workspace:FindFirstChild("World Mobs")
+					atom = atom and atom:FindFirstChild("Event Mobs")
+					atom = atom and atom:FindFirstChild("Atom Max")
+
+					if atom and atom:FindFirstChild("HumanoidRootPart") then
+						local pos = atom.HumanoidRootPart.Position
+
+						local args = {
+							{
+								Camera = CFrame.new(
+									pos + Vector3.new(10,5,10),
+									pos
+								),
+
+								SkillId = "128",
+								Began = true,
+
+								CFrame = CFrame.new(
+									pos + Vector3.new(5,0,5),
+									pos
+								),
+
+								["Typ\208\181"] = 1,
+
+								Aim = vector.create(
+									pos.X,
+									pos.Y,
+									pos.Z
+								)
+							}
+						}
+
+						game:GetService("ReplicatedStorage")
+							:WaitForChild("Remotes")
+							:WaitForChild("SkillRemote")
+							:FireServer(unpack(args))
+					end
+				end
+
+				task.wait(0.2)
+			end
+		end)
+	end
 })
 Tab4:AddToggle({
     Name = "Auto Play (Next Area)",
@@ -1188,7 +1364,7 @@ local isCharging = false
 
 Tab5:AddToggle({
     Name = "Auto Năng Lượng ⚡",
-    Default = true,
+    Default = false,
     Callback = function(Value)
         AutoEnergyEnabled = Value
         isCharging = false
@@ -1242,7 +1418,7 @@ Tab5:AddToggle({
 })
 Tab5:AddToggle({
     Name = "Auto Play (Next Area)",
-    Default = true,
+    Default = false,
     Flag = "AutoPlay",
     Callback = function(Value)
         _G.AutoPlay = Value
@@ -1318,7 +1494,7 @@ Tab5:AddToggle({
 
 Tab5:AddToggle({
     Name = "Godmode",
-    Default = true,
+    Default = false,
     Callback = function(v)
         getgenv().AntiDie = v
         spawn(function()
